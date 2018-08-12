@@ -4,8 +4,11 @@ docker tag <existing image> <hub-user>/<repo-name>[:<tag>]
 这里的tag不指定就是latest
 
 ##2 docker hub 帐号在本地验证登陆
+![](0.png)
 
 ##3 docker push 镜像到docker hub 的仓库
 docker push<hub-user>/<repo-name>:<tag>
-
+![](1.png)
 ##4 验证一下
+![](2.png)
+![](3.png)
