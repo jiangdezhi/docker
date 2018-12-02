@@ -115,7 +115,24 @@
     if __name__=='__main__':
         unittest.main()
 
-## 2.pytest
- - 在不执行代码的情况下，检测代码是否正确
- - 
-https://docs.pytest.org/en/latest/getting-started.html
+## 2.6 unittest批量读取python文件获取所有测试用例
+
+    if __name__ == '__main__':
+        suite = unittest.TestSuite()    #创建测试套件
+        all_cases = unittest.defaultTestLoader.discover('.','test_*.py')
+        #找到某个目录下所有的以test开头的Python文件里面的测试用例
+        for case in all_cases:
+            suite.addTests(case)    #把所有的测试用例添加进来
+        runner = HtmlTestRunner.HTMLTestRunner(output="testreport")
+        runner.run(suite)
+
+
+## 参考链接：
+https://www.cnblogs.com/znyyy/p/8086281.html
+
+## 其他单元测试框架
+[pytest](https://docs.pytest.org/en/latest/getting-started.html)
+
+## 应用
+[代码覆盖度测试]()
+
