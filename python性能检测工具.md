@@ -88,3 +88,65 @@
            
 
 ## 2.3 使用计时上下文管理器进行细粒度计时
+
+## 3. 内存使用率是多少
+
+## 3.1 安装[memory_profiler](https://github.com/fabianp/memory_profiler)
+   
+    pip3 install -U memory_profiler
+    pip3 install psutil   # 建议安装psutil包，因为它可以大大改善memory_profiler的性能
+    
+## 3.2 测试代码编写与line_profiler一样，因此运行primes.py,如下：
+     python -m memory_profiler primes.py
+
+## 3.3 上述命令输出结果如下：
+     Filename: primes.py
+
+     Line #    Mem usage    Increment   Line Contents
+     ================================================
+          1   28.754 MiB   28.754 MiB   @profile
+          2                             def primes(n): 
+          3   28.754 MiB    0.000 MiB       if n==2:
+          4                                     return [2]
+          5   28.754 MiB    0.000 MiB       elif n<2:
+          6                                     return []
+          7   28.754 MiB    0.000 MiB       s=list(range(3,n+1,2))
+          8   28.754 MiB    0.000 MiB       mroot = n ** 0.5
+          9   28.754 MiB    0.000 MiB       half=(n+1)/2-1
+         10   28.754 MiB    0.000 MiB       i=0
+         11   28.754 MiB    0.000 MiB       m=3
+         12   28.754 MiB    0.000 MiB       while m <= mroot:
+         13   28.754 MiB    0.000 MiB           if s[i]:
+         14   28.754 MiB    0.000 MiB               j=(m*m-3)//2
+         15   28.754 MiB    0.000 MiB               s[j]=0
+         16   28.754 MiB    0.000 MiB               while j<half:
+         17   28.754 MiB    0.000 MiB                   s[j]=0
+         18   28.754 MiB    0.000 MiB                   j+=m
+         19   28.754 MiB    0.000 MiB           i=i+1
+         20   28.754 MiB    0.000 MiB           m=2*i+3
+         21   28.754 MiB    0.000 MiB       return [2]+[x for x in s if x]
+
+## 4 内存泄漏
+cPython解释器使用引用计数做为记录内存使用的主要方法。这意味着每个对象包含一个计数器，当某处对该对象的引用被存储时计数器增加，当引用被删除时计数器递减。当计数器到达零时，cPython解释器就知道该对象不再被使用，所以删除对象，释放占用的内存。如果程序中不再被使用的对象的引用一直被占有，那么就经常发生内存泄漏。下面为一些常用的内存泄漏分析工具。
+
+## 4.1 安装[objgraph](https://mg.pov.lt/objgraph/)
+    pip3 install objgraph
+    
+## 4.2 objgraph的应用
+ - 显示占据python程序内存的头N个对象
+ - 显示一段时间以后哪些对象被删除活增加了
+ - 在我们的脚本中显示某个给定对象的所有引用
+
+         objgraph.show_refs([y], filename='sample-graph.png')
+       import objgraph
+       x = []
+       y = [x, [x], dict(x=x)]
+
+       # 列出最多实例的类型
+       print(objgraph.show_most_common_types(shortnames=False))
+       # 显示两次调用之间的对象数量变化
+       print(objgraph.show_growth(limit=None))
+       # 获取指定类型的对象
+       print(objgraph.by_type(y))
+       # 查找反向引用
+       print(objgraph.find_backref_chain(y, objgraph.is_proper_module))
