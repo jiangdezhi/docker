@@ -150,3 +150,6 @@ cPython解释器使用引用计数做为记录内存使用的主要方法。这�
        print(objgraph.by_type(y))
        # 查找反向引用
        print(objgraph.find_backref_chain(y, objgraph.is_proper_module))
+
+## 参考链接
+http://www.cnblogs.com/lxmhhy/p/6133018.html
